@@ -2,12 +2,30 @@
 <html>
 <head>
     <title>Escanear Código de Barras</title>
+    <style>
+        body {
+            font-size: 20px; /* Aumenta el tamaño de la letra del cuerpo */
+        }
+        h1 {
+            font-size: 32px; /* Aumenta el tamaño del encabezado */
+        }
+        button {
+            font-size: 20px; /* Aumenta el tamaño de la letra del botón */
+            padding: 10px 20px; /* Agrega más espacio dentro del botón */
+        }
+        video {
+            width: 100%; /* Asegura que el video sea responsive */
+            max-width: 600px; /* Limita el ancho máximo */
+            height: auto; /* Mantiene la proporción del video */
+            border: 1px solid black;
+        }
+    </style>
 </head>
 <body>
     <h1>Escanear Código de Barras</h1>
-    <video id="video" width="600" height="400" style="border: 1px solid black;"></video>
+    <video id="video" controls></video>
     <button id="startButton">Iniciar Escáner</button>
-    <script src="quagga.min.js"></script> <!-- Asegúrate de incluir QuaggaJS -->
+    <script src="quagga.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
