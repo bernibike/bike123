@@ -1,13 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Escanear Código de Barras</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title> Ler Barcode </title>
 </head>
+
 <body>
-    <h1>Escanear Código de Barras</h1>
-    <video id="video"></video>
-    <button id="startButton">Iniciar Escáner</button>
+
+    <div id="resultado"></div>
+    <div id="camera"></div>
+
     <script src="quagga.min.js"></script>
-    <script src="app.js"></script>
+
+    <script>
+
+        Quagga.init({
+            inputStream: {
+                name: "Live",
+                type: "LiveStream",
+                target: document.querySelector('#camera')    // Or '#yourElement' (optional)
+            },
+            decoder: {
+                readers: ["code_128_reader"]
+            }
+        }, function (err) {
+            if (err) {
+                console.log(err);
+                return
+            }
+            console.log("Initialization finished. Ready to start");
+            Quagga.start();
+        });
+
+        Quagga.onDetected(function (data) {
+            console.log(data.codeResult.code);
+            document.querySelector('#resultado').innerText = data.codeResult.code;
+        });
+
+    </script>
+
 </body>
+
 </html>
