@@ -5,7 +5,10 @@ document.getElementById('startButton').addEventListener('click', function() {
             inputStream: {
                 name: "Live",
                 type: "LiveStream",
-                target: document.querySelector('#video')    // Pasa el elemento video a Quagga
+                target: document.querySelector('#video'),    // Pasa el elemento video a Quagga
+                constraints: {
+                    facingMode: "environment" // Intenta usar la cámara trasera en dispositivos móviles
+                },
             },
             decoder: {
                 readers: ["code_128_reader"]  // Ajusta según el tipo de código de barras
