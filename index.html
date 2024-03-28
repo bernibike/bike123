@@ -1,102 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title> Leer Código de Barras </title>
+    <title>Escáner de Códigos de Barras</title>
     <style>
-        /* Añadir estilos aquí */
-        #camera {
-            width: 640px;
-            height: 200px;
-            margin: 0 auto;
-            position: relative;
-            overflow: hidden;
-        }
-
-        #camera video, #camera canvas {
-            position: absolute;
-            top: -40%; /* Ajusta este valor para coincidir con el área superior que se quiere mostrar */
-            left: 0;
-            width: 100%;
-            height: auto;
-        }
+        #interactive.viewport {position: relative; width: 100%; height: 300px; border: 1px solid silver;}
+        .drawingBuffer {position: absolute; left: 0; top: 0;}
+        .linea-guia {position: absolute; margin-left: -1px; width: 100%; height: 2px; background-color: red; top: 50%;}
     </style>
 </head>
-
 <body>
 
-    <div id="resultado"></div>
-    <div id="camera"></div>
+<div id="interactive" class="viewport">
+    <div class="linea-guia"></div>
+</div>
 
-    <script src="quagga.min.js"></script>
-
-    <script>
-
-        Quagga.init({
-    inputStream: {
-        name: "Live",
-        type: "LiveStream",
-        target: document.querySelector('#camera'),
-        constraints: {
-            width: { min: 640 },
-            height: { min: 480 }, // Asegúrate de que esto refleje la altura real utilizada
-            facingMode: "environment"
+<script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+<script>
+    Quagga.init({
+        inputStream : {
+            name : "Live",
+            type : "LiveStream",
+            target: document.querySelector('#interactive'),
+            constraints: {
+                facingMode: "environment"
+            },
         },
-        area: { // Ajusta esta sección para que coincida con el área visible ajustada por CSS
-            top: "40%",    // Ajusta según sea necesario
-            right: "0%",
-            left: "0%",
-            bottom: "40%"  // Ajusta según sea necesario
+        decoder : {
+            readers : ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader", "code_39_vin_reader", "codabar_reader", "upc_reader", "upc_e_reader", "i2of5_reader"]
+        },
+        locate: true,
+        locator: {
+            halfSample: true,
+            patchSize: "medium", // x-small, small, medium, large, x-large
         }
-    },
-    decoder: {
-        readers: ["code_128_reader", "upc_reader", "ean_reader", "code_39_reader"]
-    }
-}, function (err) {
-    if (err) {
-        console.log(err);
-        return
-    }
-    console.log("Initialization finished. Ready to start");
-    Quagga.start();
-});
-
-        Quagga.onDetected(function (data) {
-            console.log(data.codeResult.code);
-            document.querySelector('#resultado').innerText = data.codeResult.code;
-            enviarCodigo(data.codeResult.code);
-        });
-
-        function enviarCodigo(codigo) {
-            var url = 'https://script.google.com/macros/u/7/s/AKfycbz-ZadAjZunt0GOrYRJChl0Bej6WV2hb8ozZbNlPiFThysPZ5iZ5cGeePQfTkyp1jpfJw/exec'; // Reemplaza esto con la URL de tu Web App
-            fetch(url, {
-                method: 'POST',
-                mode: 'no-cors', // Esto puede ser necesario dependiendo de tu configuración CORS en Apps Script
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({codigo: codigo})
-            })
-            .then(response => {
-                if(!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.text();
-            })
-            .then(data => {
-                console.log(data);
-                // Aquí podrías actualizar tu UI para mostrar el resultado.
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
+    }, function(err) {
+        if (err) {
+            console.log(err);
+            return
         }
+        console.log("Initialization finished. Ready to start");
+        Quagga.start();
+    });
 
-    </script>
-
+    Quagga.onDetected(function(result) {
+        var code = result.codeResult.code;
+        alert("Código de Barras Detectado: " + code);
+        // Aquí puedes hacer lo que necesites con el código detectado, como enviarlo a un servidor o mostrarlo en la interfaz.
+    });
+</script>
 </body>
-
 </html>
