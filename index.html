@@ -18,11 +18,22 @@
     <script>
 
         Quagga.init({
-            inputStream: {
-                name: "Live",
-                type: "LiveStream",
-                target: document.querySelector('#camera')
-            },
+                inputStream: {
+        name: "Live",
+        type: "LiveStream",
+        target: document.querySelector('#camera'),
+        constraints: {
+            width: { min: 640 },
+            height: { min: 480 },
+            facingMode: "environment"
+        },
+        area: { // Define la región de interés
+            top: "30%",    // Comienza a escanear desde el 30% del borde superior hacia abajo
+            right: "30%",  // Comienza a escanear desde el 30% del borde derecho hacia la izquierda
+            left: "30%",   // Comienza a escanear desde el 30% del borde izquierdo hacia la derecha
+            bottom: "30%"  // Comienza a escanear desde el 30% del borde inferior hacia arriba
+        }
+    },
             decoder: {
                 readers: ["code_128_reader", "upc_reader", "ean_reader", "code_39_reader"]
             }
