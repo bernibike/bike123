@@ -2,98 +2,13 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escáner de Códigos de Barras</title>
-    <style>
-    #interactive.viewport {
-        position: relative;
-        width: 100%;
-        max-width: 100%; /* Asegura que no exceda el ancho de la pantalla */
-        height: 300px;
-        margin: 0 auto; /* Centra el contenedor si es más pequeño que el ancho de la pantalla */
-        border: 1px solid silver;
-    }
-    .drawingBuffer {
-        position: absolute;
-        left: 0;
-        top: 0;
-    }
-    .linea-guia {
-        position: absolute;
-        left: 0; /* Asegúrate de que comience desde el borde izquierdo */
-        width: 100%; /* Ocupa todo el ancho del contenedor */
-        height: 2px;
-        background-color: red;
-        top: 50%;
-    }
-    #resultadoScan {
-        height: 20px; /* O el alto que prefieras */
-        color: black; /* Color del texto */
-        background-color: white; /* Fondo para destacar el texto */
-        border: 1px solid #000; /* Borde opcional */
-        margin-top: 10px; /* Espacio arriba del div */
-    }
-</style>
+    <title>Escaner de Código de Barras</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<div id="interactive" class="viewport">
-    <div class="linea-guia"></div>
-</div>
-
-<div id="resultadoScan"></div>
-<!-- Agrega un nuevo div para mostrar el estado de la petición -->
-<div id="estadoPeticion"></div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
-<script>
-    Quagga.init({
-        inputStream : {
-            name : "Live",
-            type : "LiveStream",
-            target: document.querySelector('#interactive'),
-            constraints: {
-                facingMode: "environment"
-            },
-        },
-        decoder : {
-            readers : ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader", "code_39_vin_reader", "codabar_reader", "upc_reader", "upc_e_reader", "i2of5_reader"]
-        },
-        locate: true,
-        locator: {
-            halfSample: true,
-            patchSize: "medium",
-        }
-    }, function(err) {
-        if (err) {
-            console.log(err);
-            return
-        }
-        console.log("Initialization finished. Ready to start");
-        Quagga.start();
-    });
-
-    Quagga.onDetected(function(result) {
-        var code = result.codeResult.code;
-        console.log("Código detectado:", code); // Esto debería mostrarse en la consola.
-        document.getElementById("resultadoScan").innerText = "Código leído: " + code;
-
-        fetch('https://app-heroku3-48b1ffa2b601.herokuapp.com/enviar-codigo', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({codigo: code})
-        })
-        .then(response => {
-            // Asumimos éxito, no podemos leer la respuesta debido a no-cors
-            document.getElementById("estadoPeticion").innerText = "Código enviado al servidor correctamente.";
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            document.getElementById("estadoPeticion").innerText = "Error al enviar el código al servidor.";
-        });
-    });
-</script>
+    <div id="scanner-container"></div>
+    <div id="result">Resultado del escaneo aquí...</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
