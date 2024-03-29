@@ -49,7 +49,7 @@
     Quagga.onDetected(function(result) {
   var code = result.codeResult.code;
 
-  fetch('https://app-heroku3-48b1ffa2b601.herokuapp.com', {
+  fetch('https://app-heroku3-48b1ffa2b601.herokuapp.com/enviar-codigo', {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json',
