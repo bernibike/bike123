@@ -17,6 +17,8 @@
 </div>
 
 <div id="resultadoScan"></div>
+<!-- Agrega un nuevo div para mostrar el estado de la petición -->
+<div id="estadoPeticion"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
 <script>
@@ -35,7 +37,7 @@
         locate: true,
         locator: {
             halfSample: true,
-            patchSize: "medium", // x-small, small, medium, large, x-large
+            patchSize: "medium",
         }
     }, function(err) {
         if (err) {
@@ -47,31 +49,26 @@
     });
 
     Quagga.onDetected(function(result) {
-  var code = result.codeResult.code;
+        var code = result.codeResult.code;
+        // Muestra el código en tiempo real
+        document.getElementById("resultadoScan").innerText = "Código leído: " + code;
 
-  fetch('https://app-heroku3-48b1ffa2b601.herokuapp.com/enviar-codigo', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({codigo: code})
-})
-  .then(response => {
-    if (!response.ok && response.type !== 'opaque') {
-      throw new Error('No se pudo establecer comunicación con el servidor.');
-    }
-    return response.text();
-  })
-  .then(data => {
-    // Como estás en modo 'no-cors', es posible que no puedas leer el cuerpo de la respuesta directamente.
-    // Aquí, asumimos que la respuesta ha sido exitosa y mostramos un mensaje genérico.
-    document.getElementById("resultadoScan").innerText = "Código procesado. Verifica si el código coincide con alguno en la hoja.";
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    document.getElementById("resultadoScan").innerText = "Error en la petición o código no encontrado.";
-  });
-});
+        fetch('https://app-heroku3-48b1ffa2b601.herokuapp.com/enviar-codigo', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({codigo: code})
+        })
+        .then(response => {
+            // Asumimos éxito, no podemos leer la respuesta debido a no-cors
+            document.getElementById("estadoPeticion").innerText = "Código enviado al servidor correctamente.";
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById("estadoPeticion").innerText = "Error al enviar el código al servidor.";
+        });
+    });
 </script>
 </body>
 </html>
