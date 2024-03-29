@@ -49,14 +49,13 @@
     Quagga.onDetected(function(result) {
   var code = result.codeResult.code;
 
-  fetch('https://script.google.com/macros/s/AKfycbxPz38i_S6xSDMrsDzVo9l1AcrMPmxPK2-rvJe9ToiRCYfKdH3MElLh22esNlbeNIe_/exec', {
+  fetch('https://nombre-de-tu-aplicacion.herokuapp.com/enviar-codigo', {
     method: 'POST',
-    mode: 'no-cors', // Recuerda que el modo 'no-cors' limita el tipo de respuestas que puedes leer.
     headers: {
         'Content-Type': 'application/json',
     },
     body: JSON.stringify({codigo: code})
-  })
+})
   .then(response => {
     if (!response.ok && response.type !== 'opaque') {
       throw new Error('No se pudo establecer comunicación con el servidor.');
