@@ -16,6 +16,8 @@
     <div class="linea-guia"></div>
 </div>
 
+<div id="resultadoScan"></div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
 <script>
     Quagga.init({
@@ -45,25 +47,26 @@
     });
 
     Quagga.onDetected(function(result) {
-    var code = result.codeResult.code;
+  var code = result.codeResult.code;
 
-    // Reemplaza 'https://script.google.com/macros/s/AKfycbzudLHfnAFU_281KUN3AXsU1I4WzBd12-fezR6vDLLFsBLnYRhcpGKitgBpJwn2qEob/exec' con la URL de tu Web App de Google Apps Script
-    fetch('https://script.google.com/macros/s/AKfycbxPz38i_S6xSDMrsDzVo9l1AcrMPmxPK2-rvJe9ToiRCYfKdH3MElLh22esNlbeNIe_/exec', {
-        method: 'POST',
-        mode: 'no-cors', // Puede que necesites ajustar esto según tu configuración de CORS en Apps Script
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({codigo: code})
-    })
-    .then(response => response.text())
-    .then(data => {
-        alert("Dato recibido de Sheets: " + data);
-        // Puedes modificar el DOM aquí para mostrar los datos recibidos
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+  fetch('https://script.google.com/macros/s/AKfycbxPz38i_S6xSDMrsDzVo9l1AcrMPmxPK2-rvJe9ToiRCYfKdH3MElLh22esNlbeNIe_/exec', {
+    method: 'POST',
+    mode: 'no-cors', // Puede que necesites ajustar esto según tu configuración de CORS en Apps Script
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({codigo: code})
+  })
+  .then(response => response.text())
+  .then(data => {
+    document.getElementById("resultadoScan").innerText = "Dato recibido de Sheets: " + data;
+    // Actualiza el elemento del DOM con el dato recibido
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    document.getElementById("resultadoScan").innerText = "Error en la petición.";
+    // Muestra mensaje de error en el elemento del DOM
+  });
 });
 </script>
 </body>
