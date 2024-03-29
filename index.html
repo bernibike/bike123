@@ -105,10 +105,25 @@
                 }
             });
 
-
             Quagga.onDetected(function (result) {
-                document.getElementById('result').textContent = "Barcode detected and processed: " + result.codeResult.code;
-            });
+            let code = result.codeResult.code;
+            if (code.length === 10 || code.length === 16) {
+            fetch('https://app-heroku3-48b1ffa2b601.herokuapp.com/enviar-codigo', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ codigo: code })
+        })
+        .then(response => response.text())
+        .then(data => {
+            // Imprime el código escaneado y el resultado obtenido del servidor
+            document.getElementById('result').textContent = "Código escaneado: " + code + ". Resultado: " + data;
+        })
+        .catch(error => console.error('Error:', error));
+    }
+});
+            
         }
 
 
