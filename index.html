@@ -108,7 +108,7 @@
             Quagga.onDetected(function (result) {
             let code = result.codeResult.code;
             if (code.length === 10 || code.length === 16) {
-            fetch('https://app-heroku3-48b1ffa2b601.herokuapp.com/enviar-codigo', {
+            fetch('https://app-heroku3-48b1ffa2b601.herokuapp.com', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
