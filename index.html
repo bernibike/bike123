@@ -26,6 +26,13 @@
         background-color: red;
         top: 50%;
     }
+    #resultadoScan {
+        height: 20px; /* O el alto que prefieras */
+        color: black; /* Color del texto */
+        background-color: white; /* Fondo para destacar el texto */
+        border: 1px solid #000; /* Borde opcional */
+        margin-top: 10px; /* Espacio arriba del div */
+    }
 </style>
 </head>
 <body>
@@ -68,7 +75,7 @@
 
     Quagga.onDetected(function(result) {
         var code = result.codeResult.code;
-        // Muestra el código en tiempo real
+        console.log("Código detectado:", code); // Esto debería mostrarse en la consola.
         document.getElementById("resultadoScan").innerText = "Código leído: " + code;
 
         fetch('https://app-heroku3-48b1ffa2b601.herokuapp.com/enviar-codigo', {
