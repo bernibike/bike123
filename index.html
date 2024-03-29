@@ -51,21 +51,26 @@
 
   fetch('https://script.google.com/macros/s/AKfycbxPz38i_S6xSDMrsDzVo9l1AcrMPmxPK2-rvJe9ToiRCYfKdH3MElLh22esNlbeNIe_/exec', {
     method: 'POST',
-    mode: 'no-cors', // Puede que necesites ajustar esto según tu configuración de CORS en Apps Script
+    mode: 'no-cors', // Recuerda que el modo 'no-cors' limita el tipo de respuestas que puedes leer.
     headers: {
         'Content-Type': 'application/json',
     },
     body: JSON.stringify({codigo: code})
   })
-  .then(response => response.text())
+  .then(response => {
+    if (!response.ok && response.type !== 'opaque') {
+      throw new Error('No se pudo establecer comunicación con el servidor.');
+    }
+    return response.text();
+  })
   .then(data => {
-    document.getElementById("resultadoScan").innerText = "Dato recibido de Sheets: " + data;
-    // Actualiza el elemento del DOM con el dato recibido
+    // Como estás en modo 'no-cors', es posible que no puedas leer el cuerpo de la respuesta directamente.
+    // Aquí, asumimos que la respuesta ha sido exitosa y mostramos un mensaje genérico.
+    document.getElementById("resultadoScan").innerText = "Código procesado. Verifica si el código coincide con alguno en la hoja.";
   })
   .catch(error => {
     console.error('Error:', error);
-    document.getElementById("resultadoScan").innerText = "Error en la petición.";
-    // Muestra mensaje de error en el elemento del DOM
+    document.getElementById("resultadoScan").innerText = "Error en la petición o código no encontrado.";
   });
 });
 </script>
